@@ -50,7 +50,24 @@ sceneform.asset('sampledata/model.obj',
         'sampledata/model.sfa',
         'src/main/res/raw/model')
 
+
+
 sceneform.asset('sampledata/oak_tree.obj',
         'default',
         'sampledata/oak_tree.sfa',
         'src/main/res/raw/oak_tree')
+
+sceneform.asset('sampledata/elm_tree.obj',
+        'default',
+        'sampledata/elm_tree.sfa',
+        'src/main/res/raw/elm_tree')
+
+sceneform.asset('sampledata/queen_palm_tree.obj',
+        'default',
+        'sampledata/queen_palm_tree.sfa',
+        'src/main/res/raw/queen_palm_tree')
+
+sceneform.asset('sampledata/cherry_blossom.obj',
+        'default',
+        'sampledata/cherry_blossom.sfa',
+        'src/main/res/raw/cherry_blossom')
