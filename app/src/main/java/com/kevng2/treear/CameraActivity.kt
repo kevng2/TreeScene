@@ -10,8 +10,8 @@ import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
 
 class MainActivity : AppCompatActivity() {
-    private var mArFragment: ArFragment? = null;
-    private var mModelRenderable: ModelRenderable? = null;
+    private var mArFragment: ArFragment? = null
+    private var mModelRenderable: ModelRenderable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
