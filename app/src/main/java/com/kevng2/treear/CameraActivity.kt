@@ -9,7 +9,7 @@ import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
 
-class MainActivity : AppCompatActivity() {
+class CameraActivity : AppCompatActivity() {
     private var mArFragment: ArFragment? = null
     private var mModelRenderable: ModelRenderable? = null
 
