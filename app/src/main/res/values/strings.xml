@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">TreeAR</string>
-    <string name="start_camera">Start Camera</string>
+    <string name="start_camera">Plant Trees!</string>
     <string name="main_menu_background_image">Main menu background image</string>
+    <string name="trees">Trees</string>
+    <string name="oak_tree">Oak</string>
+    <string name="cherry_blossom">Cherry Blossom</string>
+    <string name="palm_tree">Palm</string>
+    <string name="pine">Pine</string>
+    <string name="elm">Elm</string>
 </resources>
