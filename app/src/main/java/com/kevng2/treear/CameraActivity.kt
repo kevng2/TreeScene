@@ -1,6 +1,9 @@
 package com.kevng2.treear
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -32,29 +35,32 @@ class CameraActivity : AppCompatActivity() {
         )
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         tree_selection_spinner.adapter = arrayAdapter
-        tree_selection_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
+        tree_selection_spinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    TODO("Not yet implemented")
+                }
 
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                setModel(position)
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    setModel(position)
+                }
             }
-        }
     }
 
     private fun setUpPlane() {
-        mArFragment?.setOnTapArPlaneListener { hitResult, plane, motionEvent ->
-            val anchor: Anchor = hitResult.createAnchor()
-            val anchorNode = AnchorNode(anchor)
-            anchorNode.setParent(mArFragment!!.arSceneView.scene as NodeParent)
-            createModel(anchorNode)
-        }
+        Thread {
+            mArFragment?.setOnTapArPlaneListener { hitResult, plane, motionEvent ->
+                val anchor: Anchor = hitResult.createAnchor()
+                val anchorNode = AnchorNode(anchor)
+                anchorNode.setParent(mArFragment!!.arSceneView.scene as NodeParent)
+                createModel(anchorNode)
+            }
+        }.start()
     }
 
     private fun createModel(anchorNode: AnchorNode) {
@@ -68,13 +74,17 @@ class CameraActivity : AppCompatActivity() {
         ModelRenderable.builder()
             .setSource(applicationContext, mModelId)
             .build()
-            .thenAccept { renderable: ModelRenderable ->  mModelRenderable = renderable }
-            .exceptionally { Toast.makeText(applicationContext, "Model can't be loaded",
-                Toast.LENGTH_SHORT).show(); return@exceptionally null }
+            .thenAccept { renderable: ModelRenderable -> mModelRenderable = renderable }
+            .exceptionally {
+                Toast.makeText(
+                    applicationContext, "Model can't be loaded",
+                    Toast.LENGTH_SHORT
+                ).show(); return@exceptionally null
+            }
     }
 
     private fun setModel(treeId: Int) {
-        when(treeId) {
+        when (treeId) {
             0 -> mModelId = R.raw.oak_tree
             1 -> mModelId = R.raw.model
             2 -> mModelId = R.raw.elm_tree
