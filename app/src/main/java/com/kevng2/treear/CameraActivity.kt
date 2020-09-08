@@ -2,7 +2,6 @@ package com.kevng2.treear
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -18,14 +17,15 @@ class CameraActivity : AppCompatActivity() {
     private var mArFragment: ArFragment? = null
     private var mModelRenderable: ModelRenderable? = null
     private var mModelId: Int = R.raw.oak_tree
+    private var isInsertMode: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
         setSupportActionBar(camera_toolbar)
-        setModel(mModelId)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        mArFragment = supportFragmentManager.findFragmentById(R.id.fragment) as ArFragment
+        mArFragment = fragment as ArFragment
+        setUpModel()
         setUpPlane()
     }
 
@@ -46,7 +46,12 @@ class CameraActivity : AppCompatActivity() {
                 R.id.cherry_blossom -> mModelId = R.raw.cherry_blossom
             }
             setUpModel()
-            Log.d("CameraActivity", item.itemId.toString())
+        }
+
+        when (item.itemId) {
+            R.id.trash -> {
+                isInsertMode = !isInsertMode
+            }
         }
         return true
     }
@@ -66,6 +71,14 @@ class CameraActivity : AppCompatActivity() {
         val node = TransformableNode(mArFragment?.transformationSystem)
         node.setParent(anchorNode)
         node.renderable = mModelRenderable
+        node.setOnTapListener { hitTestResult, motionEvent ->
+            if (!isInsertMode) {
+                mArFragment?.arSceneView?.scene?.removeChild(anchorNode)
+                anchorNode.anchor?.detach()
+                anchorNode.setParent(null)
+                anchorNode.renderable = null
+            }
+        }
         node.select()
     }
 
@@ -80,17 +93,6 @@ class CameraActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show(); return@exceptionally null
             }
-    }
-
-    private fun setModel(treeId: Int) {
-        when (treeId) {
-            0 -> mModelId = R.raw.oak_tree
-            1 -> mModelId = R.raw.model
-            2 -> mModelId = R.raw.elm_tree
-            3 -> mModelId = R.raw.queen_palm_tree
-            4 -> mModelId = R.raw.cherry_blossom
-        }
-        setUpModel()
     }
 
     private fun isModel(id: Int): Boolean {

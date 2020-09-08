@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:icon="@drawable/tree_icon"
+        android:icon="@drawable/ic_add_tree"
         app:showAsAction="ifRoom"
         android:title="@string/trees">
         <menu>
@@ -23,4 +23,9 @@
                 android:title="@string/cherry_blossom"/>
         </menu>
     </item>
+    <item
+        android:id="@+id/trash"
+        android:title="@string/trash"
+        android:icon="@drawable/ic_delete"
+        app:showAsAction="ifRoom"/>
 </menu>
