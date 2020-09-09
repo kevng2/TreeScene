@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
 import com.google.ar.core.Anchor
 import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.NodeParent
@@ -23,8 +24,8 @@ class CameraActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
         setSupportActionBar(camera_toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
         mArFragment = fragment as ArFragment
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         setUpModel()
         setUpPlane()
     }
@@ -50,6 +51,13 @@ class CameraActivity : AppCompatActivity() {
 
         when (item.itemId) {
             R.id.trash -> {
+                if (isInsertMode) {
+                    item.setIcon(R.drawable.ic_done)
+                }
+                else {
+                    item.setIcon(R.drawable.ic_delete)
+                }
+
                 isInsertMode = !isInsertMode
             }
         }
@@ -57,14 +65,14 @@ class CameraActivity : AppCompatActivity() {
     }
 
     private fun setUpPlane() {
-        Thread {
-            mArFragment?.setOnTapArPlaneListener { hitResult, plane, motionEvent ->
+        mArFragment?.setOnTapArPlaneListener { hitResult, plane, motionEvent ->
+            if (isInsertMode) {
                 val anchor: Anchor = hitResult.createAnchor()
                 val anchorNode = AnchorNode(anchor)
-                anchorNode.setParent(mArFragment!!.arSceneView.scene as NodeParent)
+                anchorNode.setParent(mArFragment?.arSceneView?.scene as NodeParent)
                 createModel(anchorNode)
             }
-        }.start()
+        }
     }
 
     private fun createModel(anchorNode: AnchorNode) {

@@ -3,9 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.kevng2.treear">
 
-    <uses-feature android:name="android.hardware.camera2.ar" />
-
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera.ar" />
+    <uses-permission android:name="android.permission.CAMERA" android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -16,18 +15,14 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         android:fullBackupContent="@xml/backup_descriptor">
-        <activity android:name=".MenuActivity">
+        <activity android:name=".CameraActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CameraActivity">
-        </activity>
-
         <meta-data
             android:name="com.google.ar.core"
             android:value="required" />
     </application>
-
 </manifest>
