@@ -1,10 +1,14 @@
 package com.kevng2.treear
 
+import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.ar.core.Anchor
 import com.google.ar.sceneform.AnchorNode
@@ -59,6 +63,22 @@ class CameraActivity : AppCompatActivity() {
                 }
 
                 isInsertMode = !isInsertMode
+            }
+            R.id.help -> {
+                Log.d("CameraActivity", "onOptionsItemSelected (line 68): ")
+                AlertDialog.Builder(this@CameraActivity)
+                    .setPositiveButton(android.R.string.ok) { dialog, which -> }
+                    .setMessage("Welcome to TreeVisualizer\n\n" +
+                            "To start, wave your camera around like the animation is indicating on " +
+                            "the camera preview. Then, an indicator will pop up to plant some trees!\n\n" +
+                            "Tap on any dotted area to plant a tree\n\n" +
+                            "Add Icon: Switch tree type\n\n" +
+                            "Trash Icon: Delete mode. Tap on tree to delete\n\n" +
+                            "Check mark Icon: Switch back to add mode\n\n" +
+                            "Pinch to grow the tree\n\n" +
+                            "Hold one finger on the tree and use another finger to reorient the tree\n\n")
+                    .create()
+                    .show()
             }
         }
         return true

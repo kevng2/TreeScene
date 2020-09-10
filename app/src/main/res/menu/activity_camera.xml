@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:icon="@drawable/ic_add_tree"
+        android:icon="@drawable/ic_tree_option"
         app:showAsAction="ifRoom"
         android:title="@string/trees">
         <menu>
@@ -28,4 +28,10 @@
         android:title="@string/trash"
         android:icon="@drawable/ic_delete"
         app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/help"
+        android:title="@string/help"
+        android:icon="@drawable/ic_help"
+        app:showAsAction="ifRoom"
+        />
 </menu>
