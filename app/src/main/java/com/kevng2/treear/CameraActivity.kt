@@ -8,9 +8,7 @@ import android.os.Environment
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.PixelCopy
+import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
@@ -42,7 +40,6 @@ class CameraActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         setUpModel()
         setUpPlane()
-
         take_picture_button.setOnClickListener {
             takePhoto()
         }
@@ -173,7 +170,6 @@ class CameraActivity : AppCompatActivity() {
         val frag = fragment as ArFragment
         val view = frag.arSceneView
         val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
-
         val handlerThread = HandlerThread("PixelCopier")
         handlerThread.start()
 

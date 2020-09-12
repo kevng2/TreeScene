@@ -11,4 +11,6 @@
     <string name="trash">Trash</string>
     <string name="help">Help</string>
     <string name="take_picture">Take picture</string>
+    <string name="tree_icon">Tree icon</string>
+    <string name="tree_type">Tree Type</string>
 </resources>
