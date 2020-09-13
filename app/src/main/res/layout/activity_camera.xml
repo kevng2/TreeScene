@@ -59,7 +59,7 @@
         android:layout_marginBottom="16dp"
         android:contentDescription="@string/take_picture"
         android:src="@drawable/ic_menu_camera"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/fragment"
         app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 

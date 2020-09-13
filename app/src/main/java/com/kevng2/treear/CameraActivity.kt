@@ -53,17 +53,6 @@ class CameraActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
-        if (isModel(item.itemId)) {
-            when (item.itemId) {
-                R.id.oak -> mModelId = R.raw.oak_tree
-                R.id.pine -> mModelId = R.raw.model
-                R.id.elm -> mModelId = R.raw.elm_tree
-                R.id.palm -> mModelId = R.raw.queen_palm_tree
-                R.id.cherry_blossom -> mModelId = R.raw.cherry_blossom
-            }
-            setUpModel()
-        }
-
         when (item.itemId) {
             R.id.trash -> {
                 if (isInsertMode) {
@@ -133,15 +122,6 @@ class CameraActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show(); return@exceptionally null
             }
-    }
-
-    private fun isModel(id: Int): Boolean {
-        if (id == R.id.oak || id == R.id.pine || id == R.id.elm ||
-            id == R.id.palm || id == R.id.cherry_blossom
-        ) {
-            return true
-        }
-        return false
     }
 
     private fun generateFilename(): String {

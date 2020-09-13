@@ -2,28 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:icon="@drawable/ic_tree_option"
-        app:showAsAction="ifRoom"
-        android:title="@string/trees">
-        <menu>
-            <item
-                android:id="@+id/oak"
-                android:title="@string/oak_tree" />
-            <item
-                android:id="@+id/pine"
-                android:title="@string/pine"/>
-            <item
-                android:id="@+id/elm"
-                android:title="@string/elm"/>
-            <item
-                android:id="@+id/palm"
-                android:title="@string/palm_tree" />
-            <item
-                android:id="@+id/cherry_blossom"
-                android:title="@string/cherry_blossom"/>
-        </menu>
-    </item>
-    <item
         android:id="@+id/trash"
         android:title="@string/trash"
         android:icon="@drawable/ic_delete"
