@@ -28,8 +28,8 @@ import java.util.*
 
 class CameraActivity : AppCompatActivity() {
     private var mArFragment: ArFragment? = null
-    private var mModelRenderable: ModelRenderable? = null
-    private var mModelId: Int = R.raw.oak_tree
+
+
     private var isInsertMode: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -196,5 +196,10 @@ class CameraActivity : AppCompatActivity() {
             }
             handlerThread.quitSafely()
         }, Handler(handlerThread.looper))
+    }
+
+    companion object {
+        var mModelId: Int = R.raw.oak_tree
+        var mModelRenderable: ModelRenderable? = null
     }
 }
