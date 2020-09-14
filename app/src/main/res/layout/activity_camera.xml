@@ -43,12 +43,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/fragment"
         app:layout_constraintVertical_weight="1">
+
         <fragment
             android:id="@+id/gallery_fragment"
-            android:name="com.kevng2.treear.GalleryFragment"
+            android:name="com.kevng2.treear.ToggleButtonFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-             />
+            android:layout_height="match_parent" />
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
