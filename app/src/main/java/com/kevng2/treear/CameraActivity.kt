@@ -19,6 +19,7 @@ import com.google.ar.sceneform.NodeParent
 import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
+import com.techyourchance.threadposter.BackgroundThreadPoster
 import kotlinx.android.synthetic.main.activity_camera.*
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -28,11 +29,10 @@ import java.util.*
 
 class CameraActivity : AppCompatActivity() {
     private var mArFragment: ArFragment? = null
-
-
     private var isInsertMode: Boolean = true
+    private val mBackgroundThreadPoster = BackgroundThreadPoster()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)  {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
         setSupportActionBar(camera_toolbar)
@@ -42,6 +42,11 @@ class CameraActivity : AppCompatActivity() {
         setUpPlane()
         take_picture_button.setOnClickListener {
             takePhoto()
+        }
+
+        mBackgroundThreadPoster.post {
+            val result = PolyFetcher().getUrlString("https://www.bignerdranch.com")
+            Log.i("CameraActivity", "Fetched contents of URL: $result")
         }
     }
 
@@ -72,11 +77,11 @@ class CameraActivity : AppCompatActivity() {
                                 "To start, wave your camera around like the animation is indicating on " +
                                 "the camera preview. Then, an indicator will pop up to plant some trees!\n\n" +
                                 "Tap on any dotted area to plant a tree\n\n" +
-                                "Add Icon: Switch tree type\n\n" +
+                                "You can switch trees anytime by selecting the trees at the bottom\n\n" +
                                 "Trash Icon: Delete mode. Tap on tree to delete\n\n" +
                                 "Check mark Icon: Switch back to add mode\n\n" +
                                 "Pinch to grow the tree\n\n" +
-                                "Hold one finger on the tree and use another finger to reorient the tree\n\n"
+                                "Hold one finger on the tree and use another finger to rotate the tree\n\n"
                     )
                     .create()
                     .show()
