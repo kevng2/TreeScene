@@ -19,8 +19,14 @@ import com.google.ar.sceneform.NodeParent
 import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
+import com.kevng2.treear.api.PolyApi
 import com.techyourchance.threadposter.BackgroundThreadPoster
 import kotlinx.android.synthetic.main.activity_camera.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -44,10 +50,23 @@ class CameraActivity : AppCompatActivity() {
             takePhoto()
         }
 
-        mBackgroundThreadPoster.post {
-            val result = PolyFetcher().getUrlString("https://www.bignerdranch.com")
-            Log.i("CameraActivity", "Fetched contents of URL: $result")
-        }
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://www.bignerdranch.com")
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build()
+
+        val polyApi = retrofit.create(PolyApi::class.java)
+        val polyHomePageRequest = polyApi.fetchContents()
+        polyHomePageRequest.enqueue(object : Callback<String> {
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.e("CameraActivity", "Failed to fetch photos ", t)
+            }
+
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                Log.d("CameraActivity", "Response received: ${response.body()} ")
+            }
+        })
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -186,5 +205,6 @@ class CameraActivity : AppCompatActivity() {
     companion object {
         var mModelId: Int = R.raw.oak_tree
         var mModelRenderable: ModelRenderable? = null
+        private const val TAG = "CameraActivity"
     }
 }
