@@ -12,6 +12,7 @@ import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
+import androidx.lifecycle.LiveData
 import com.google.android.material.snackbar.Snackbar
 import com.google.ar.core.Anchor
 import com.google.ar.sceneform.AnchorNode
@@ -50,23 +51,10 @@ class CameraActivity : AppCompatActivity() {
             takePhoto()
         }
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://www.bignerdranch.com")
-            .addConverterFactory(ScalarsConverterFactory.create())
-            .build()
-
-        val polyApi = retrofit.create(PolyApi::class.java)
-        val polyHomePageRequest = polyApi.fetchContents()
-        polyHomePageRequest.enqueue(object : Callback<String> {
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                Log.e("CameraActivity", "Failed to fetch photos ", t)
-            }
-
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                Log.d("CameraActivity", "Response received: ${response.body()} ")
-            }
+        val polyLiveData : LiveData<String> = PolyFetcher().fetchModels()
+        polyLiveData.observe(this, androidx.lifecycle.Observer { responseString ->
+            Log.d(TAG, "Response received: $responseString")
         })
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
