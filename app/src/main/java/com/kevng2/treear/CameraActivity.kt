@@ -2,11 +2,8 @@ package com.kevng2.treear
 
 import android.content.Intent
 import android.graphics.Bitmap
+import android.os.*
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.os.Environment
-import android.os.Handler
-import android.os.HandlerThread
 import android.util.Log
 import android.view.*
 import android.widget.Toast
@@ -37,7 +34,6 @@ import java.util.*
 class CameraActivity : AppCompatActivity() {
     private var mArFragment: ArFragment? = null
     private var isInsertMode: Boolean = true
-    private val mBackgroundThreadPoster = BackgroundThreadPoster()
 
     override fun onCreate(savedInstanceState: Bundle?)  {
         super.onCreate(savedInstanceState)
@@ -55,6 +51,7 @@ class CameraActivity : AppCompatActivity() {
         polyLiveData.observe(this, androidx.lifecycle.Observer { responseString ->
             Log.d(TAG, "Response received: $responseString")
         })
+        Log.d("CameraActivity", "onCreate (line 57): ${BuildConfig.POLY_API_KEY}")
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
