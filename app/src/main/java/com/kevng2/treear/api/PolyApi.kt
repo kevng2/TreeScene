@@ -6,7 +6,7 @@ import retrofit2.http.GET
 
 interface PolyApi {
     @GET(
-       "v1/assets?keywords=cats&key=${BuildConfig.POLY_API_KEY}"
+       "v1/assets?key=${BuildConfig.POLY_API_KEY}"
     )
-    fun fetchModels(): Call<String>
+    fun fetchModels(): Call<PolyResponse>
 }

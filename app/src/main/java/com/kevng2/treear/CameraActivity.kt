@@ -47,11 +47,10 @@ class CameraActivity : AppCompatActivity() {
             takePhoto()
         }
 
-        val polyLiveData : LiveData<String> = PolyFetcher().fetchModels()
-        polyLiveData.observe(this, androidx.lifecycle.Observer { responseString ->
-            Log.d(TAG, "Response received: $responseString")
+        val polyLiveData: LiveData<List<PolyItem>> = PolyFetcher().fetchModels()
+        polyLiveData.observe(this, androidx.lifecycle.Observer { polyItems ->
+            Log.d(TAG, "Response received: $polyItems")
         })
-        Log.d("CameraActivity", "onCreate (line 57): ${BuildConfig.POLY_API_KEY}")
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

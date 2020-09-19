@@ -3,11 +3,14 @@ package com.kevng2.treear
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.kevng2.treear.api.ModelResponse
 import com.kevng2.treear.api.PolyApi
+import com.kevng2.treear.api.PolyResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.ByteArrayOutputStream
 import java.net.HttpURLConnection
@@ -20,25 +23,33 @@ class PolyFetcher {
 
     init {
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://poly.googleapis.com")
-            .addConverterFactory(ScalarsConverterFactory.create())
+            .baseUrl("https://poly.googleapis.com/")
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         polyApi = retrofit.create(PolyApi::class.java)
     }
 
-    fun fetchModels() : LiveData<String> {
-        val responseLiveData: MutableLiveData<String> = MutableLiveData()
-        val polyRequest: Call<String> = polyApi.fetchModels()
+    fun fetchModels() : LiveData<List<PolyItem>> {
+        val responseLiveData: MutableLiveData<List<PolyItem>> = MutableLiveData()
+        val polyRequest: Call<PolyResponse> = polyApi.fetchModels()
 
-        polyRequest.enqueue(object : Callback<String> {
-            override fun onFailure(call: Call<String>, t: Throwable) {
+        polyRequest.enqueue(object : Callback<PolyResponse> {
+            override fun onFailure(call: Call<PolyResponse>, t: Throwable) {
                 Log.e("CameraActivity", "Failed to fetch photos ", t)
             }
 
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                Log.d("CameraActivity", "Response received: ${response.body()} ")
-                responseLiveData.value = response.body()
+            override fun onResponse(call: Call<PolyResponse>, response: Response<PolyResponse>) {
+                Log.d("PolyFetcher", "Response Received: ${response.body()}")
+                val polyResponse: PolyResponse? = response.body()
+                /*
+                val modelResponse: ModelResponse? = polyResponse?.models
+                var polyItems: List<PolyItem> = modelResponse?.polyItems ?: mutableListOf()
+                polyItems = polyItems.filterNot {
+                    it.name.isBlank()
+                }
+                responseLiveData.value = polyItems
+                 */
             }
         })
 
