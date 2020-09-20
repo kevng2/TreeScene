@@ -18,12 +18,15 @@ import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
 import com.kevng2.treear.api.PolyApi
+import com.kevng2.treear.api.Post
+import com.kevng2.treear.api.assets.Assets
 import com.techyourchance.threadposter.BackgroundThreadPoster
 import kotlinx.android.synthetic.main.activity_camera.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -47,9 +50,26 @@ class CameraActivity : AppCompatActivity() {
             takePhoto()
         }
 
-        val polyLiveData: LiveData<List<PolyItem>> = PolyFetcher().fetchModels()
-        polyLiveData.observe(this, androidx.lifecycle.Observer { polyItems ->
-            Log.d(TAG, "Response received: $polyItems")
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://poly.googleapis.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val polyApi = retrofit.create(PolyApi::class.java)
+        val polyRequest: Call<Post> = polyApi.fetchModels()
+
+        polyRequest.enqueue(object : Callback<Post> {
+            override fun onFailure(call: Call<Post>, t: Throwable) {
+                Log.e("PolyFetcher", "Problem reading JSON ", t)
+            }
+
+            override fun onResponse(call: Call<Post>, response: Response<Post>) {
+                Log.d("PolyFetcher", "Received: $response")
+                val assets: ArrayList<Assets>? = response.body()?.assets
+                for (asset in assets!!) {
+                    Log.d("PolyFetcher", "onResponse (line 45): $asset")
+                }
+            }
         })
     }
 
