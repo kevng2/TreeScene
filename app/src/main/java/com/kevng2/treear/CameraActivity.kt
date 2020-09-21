@@ -6,6 +6,7 @@ import android.os.*
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.*
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
@@ -46,36 +47,28 @@ class CameraActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         setUpModel()
         setUpPlane()
-        take_picture_button.setOnClickListener {
-            takePhoto()
-        }
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://poly.googleapis.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val polyApi = retrofit.create(PolyApi::class.java)
-        val polyRequest: Call<Post> = polyApi.fetchModels()
-
-        polyRequest.enqueue(object : Callback<Post> {
-            override fun onFailure(call: Call<Post>, t: Throwable) {
-                Log.e("PolyFetcher", "Problem reading JSON ", t)
-            }
-
-            override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                Log.d("PolyFetcher", "Received: $response")
-                val assets: ArrayList<Assets>? = response.body()?.assets
-                for (asset in assets!!) {
-                    Log.d("PolyFetcher", "onResponse (line 45): $asset")
-                }
-            }
-        })
+        take_picture_button.setOnClickListener { takePhoto() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.activity_camera, menu)
+
+        val searchItem = menu?.findItem(R.id.tree_search_bar)
+        val searchView: SearchView = searchItem?.actionView as SearchView
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                val intent = Intent(this@CameraActivity, SearchActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return true
+            }
+        })
         return true
     }
 
@@ -92,7 +85,6 @@ class CameraActivity : AppCompatActivity() {
                 isInsertMode = !isInsertMode
             }
             R.id.help -> {
-                Log.d("CameraActivity", "onOptionsItemSelected (line 68): ")
                 AlertDialog.Builder(this@CameraActivity)
                     .setPositiveButton(android.R.string.ok) { dialog, which -> }
                     .setMessage(
