@@ -39,7 +39,7 @@ class CameraActivity : AppCompatActivity() {
     private var mArFragment: ArFragment? = null
     private var isInsertMode: Boolean = true
 
-    override fun onCreate(savedInstanceState: Bundle?)  {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_camera)
         setSupportActionBar(camera_toolbar)

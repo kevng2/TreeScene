@@ -17,7 +17,11 @@ class Assets {
     @Expose
     lateinit var formats: ArrayList<Format>
 
+    @SerializedName("thumbnail")
+    @Expose
+    lateinit var thumbnail: Thumbnail
+
     override fun toString(): String {
-        return "Assets(name='$name', displayName='$displayName' formats=$formats)"
+        return "Assets(name='$name', displayName='$displayName', formats=$formats, thumbnail=$thumbnail)"
     }
 }
