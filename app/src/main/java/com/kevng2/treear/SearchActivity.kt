@@ -34,7 +34,8 @@ class SearchActivity : AppCompatActivity() {
             .build()
 
         val polyApi = retrofit.create(PolyApi::class.java)
-        val polyRequest: Call<Post> = polyApi.fetchModels()
+        val polyRequest: Call<Post> =
+            polyApi.fetchModels(intent.getStringExtra(CameraActivity.SEARCH_QUERY) as String)
 
         polyRequest.enqueue(object : Callback<Post> {
             override fun onFailure(call: Call<Post>, t: Throwable) {

@@ -4,13 +4,11 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.*
 import androidx.appcompat.app.AppCompatActivity
-import android.util.Log
 import android.view.*
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
-import androidx.lifecycle.LiveData
 import com.google.android.material.snackbar.Snackbar
 import com.google.ar.core.Anchor
 import com.google.ar.sceneform.AnchorNode
@@ -18,17 +16,7 @@ import com.google.ar.sceneform.NodeParent
 import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
-import com.kevng2.treear.api.PolyApi
-import com.kevng2.treear.api.Post
-import com.kevng2.treear.api.assets.Assets
-import com.techyourchance.threadposter.BackgroundThreadPoster
 import kotlinx.android.synthetic.main.activity_camera.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -61,6 +49,7 @@ class CameraActivity : AppCompatActivity() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 val intent = Intent(this@CameraActivity, SearchActivity::class.java)
+                intent.putExtra(SEARCH_QUERY, query)
                 startActivity(intent)
                 return true
             }
@@ -201,6 +190,7 @@ class CameraActivity : AppCompatActivity() {
     companion object {
         var mModelId: Int = R.raw.oak_tree
         var mModelRenderable: ModelRenderable? = null
+        var SEARCH_QUERY: String = "SEARCH_QUERY"
         private const val TAG = "CameraActivity"
     }
 }
