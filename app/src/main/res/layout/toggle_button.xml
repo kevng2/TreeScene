@@ -10,7 +10,6 @@
         android:layout_height="match_parent"
         app:singleSelection="true"
         app:selectionRequired="true">
-
         <Button
             style="?attr/materialButtonOutlinedStyle"
             android:id="@+id/oak"

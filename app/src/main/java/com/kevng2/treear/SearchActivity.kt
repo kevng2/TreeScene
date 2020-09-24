@@ -13,13 +13,14 @@ import com.bumptech.glide.Glide
 import com.kevng2.treear.api.PolyApi
 import com.kevng2.treear.api.Post
 import com.kevng2.treear.api.assets.Assets
+import com.kevng2.treear.api.assets.format.Format
+import com.techyourchance.threadposter.BackgroundThreadPoster
 import kotlinx.android.synthetic.main.activity_search.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
+import okhttp3.ResponseBody
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.ArrayList
+import retrofit2.*
+import java.lang.reflect.Type
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var mPhotoRecyclerView: RecyclerView
@@ -30,6 +31,7 @@ class SearchActivity : AppCompatActivity() {
 
         val retrofit = Retrofit.Builder()
             .baseUrl("https://poly.googleapis.com/")
+            .addConverterFactory(nullOnEmptyConverterFactory)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -43,32 +45,60 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                Log.d("SearchActivity", "Received: $response")
-                val assets: ArrayList<Assets>? = response.body()?.assets
-                val url: ArrayList<String> = ArrayList()
-                for (asset in assets!!) {
-                    url.add(asset.thumbnail.url)
+                if (response.isSuccessful) {
+                    val assets: ArrayList<Assets>? = response.body()?.assets
+                    mPhotoRecyclerView = photo_recycler_view
+                    mPhotoRecyclerView.layoutManager = GridLayoutManager(this@SearchActivity, 3)
+                    mPhotoRecyclerView.adapter = PhotoAdapter(assets)
+                    for (asset in assets!!) {
+                        Log.d("SearchActivity", "onResponse (line 52): ${asset.formats[0].root.url}")
+                    }
                 }
-                mPhotoRecyclerView = photo_recycler_view
-                mPhotoRecyclerView.layoutManager = GridLayoutManager(this@SearchActivity, 3)
-                mPhotoRecyclerView.adapter = PhotoAdapter(url)
             }
         })
     }
 
-    inner class PhotoHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class PhotoHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         private val mPolyThumbnail: ImageView = itemView as ImageView
+        private lateinit var mAsset: Assets
 
-        fun bind(url: String) {
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        fun bind(asset: Assets) {
+            mAsset = asset
             Glide
                 .with(this@SearchActivity)
-                .load(url)
+                .load(asset.thumbnail.url)
                 .into(mPolyThumbnail)
+        }
+
+        override fun onClick(v: View?) {
+            var foundObjFormat: Boolean = false
+            for(format in mAsset.formats) {
+                if(format.formatType == "OBJ") {
+                    Log.d("PhotoHolder", "onClick (line 79): ${format.formatType}")
+                    requestDataFiles(format)
+                    foundObjFormat = true
+                    break
+                }
+            }
+        }
+
+        private fun requestDataFiles(format: Format) {
+            val backgroundThreadPoster = BackgroundThreadPoster()
+
+            for (resource in format.resources) {
+                if (resource.url.endsWith(".obj") || resource.url.endsWith(".png")) {
+
+                }
+            }
         }
     }
 
-    inner class PhotoAdapter(photos: ArrayList<String>) : RecyclerView.Adapter<PhotoHolder>() {
-        private val photosList: ArrayList<String> = photos
+    inner class PhotoAdapter(photos: ArrayList<Assets>?) : RecyclerView.Adapter<PhotoHolder>() {
+        private val photosList: ArrayList<Assets>? = photos
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoHolder {
             LayoutInflater.from(this@SearchActivity)
@@ -76,10 +106,25 @@ class SearchActivity : AppCompatActivity() {
             return PhotoHolder(ImageView(this@SearchActivity))
         }
 
-        override fun getItemCount(): Int = photosList.size
+        override fun getItemCount(): Int = photosList!!.size
 
         override fun onBindViewHolder(holder: PhotoHolder, position: Int) {
-            holder.bind(photosList[position])
+            holder.bind(photosList?.get(position)!!)
+        }
+    }
+
+    private val nullOnEmptyConverterFactory = object : Converter.Factory() {
+        fun converterFactory() = this
+        override fun responseBodyConverter(
+            type: Type,
+            annotations: Array<out Annotation>,
+            retrofit: Retrofit
+        ) = object : Converter<ResponseBody, Any?> {
+            val nextResponseBodyConverter =
+                retrofit.nextResponseBodyConverter<Any?>(converterFactory(), type, annotations)
+
+            override fun convert(value: ResponseBody) =
+                if (value.contentLength() != 0L) nextResponseBodyConverter.convert(value) else null
         }
     }
 }

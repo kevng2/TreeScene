@@ -5,9 +5,9 @@ import android.graphics.Bitmap
 import android.os.*
 import androidx.appcompat.app.AppCompatActivity
 import android.view.*
-import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.FileProvider
 import com.google.android.material.snackbar.Snackbar
 import com.google.ar.core.Anchor
@@ -35,7 +35,6 @@ class CameraActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         setUpModel()
         setUpPlane()
-
         take_picture_button.setOnClickListener { takePhoto() }
     }
 
