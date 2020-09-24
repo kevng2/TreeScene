@@ -1,5 +1,6 @@
 package com.kevng2.treear
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,8 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import com.kevng2.treear.api.PolyApi
 import com.kevng2.treear.api.Post
 import com.kevng2.treear.api.assets.Assets
@@ -17,6 +20,8 @@ import com.kevng2.treear.api.assets.format.Format
 import com.techyourchance.threadposter.BackgroundThreadPoster
 import kotlinx.android.synthetic.main.activity_search.*
 import okhttp3.ResponseBody
+import org.json.JSONArray
+import org.json.JSONObject
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.ArrayList
 import retrofit2.*
@@ -31,7 +36,6 @@ class SearchActivity : AppCompatActivity() {
 
         val retrofit = Retrofit.Builder()
             .baseUrl("https://poly.googleapis.com/")
-            .addConverterFactory(nullOnEmptyConverterFactory)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -48,17 +52,23 @@ class SearchActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val assets: ArrayList<Assets>? = response.body()?.assets
                     mPhotoRecyclerView = photo_recycler_view
-                    mPhotoRecyclerView.layoutManager = GridLayoutManager(this@SearchActivity, 3)
+                    mPhotoRecyclerView.layoutManager = GridLayoutManager(
+                        this@SearchActivity, 3
+                    )
                     mPhotoRecyclerView.adapter = PhotoAdapter(assets)
                     for (asset in assets!!) {
-                        Log.d("SearchActivity", "onResponse (line 52): ${asset.formats[0].root.url}")
+                        Log.d(
+                            "SearchActivity",
+                            "onResponse (line 52): ${asset.formats[0].root.url}"
+                        )
                     }
                 }
             }
         })
     }
 
-    inner class PhotoHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class PhotoHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
         private val mPolyThumbnail: ImageView = itemView as ImageView
         private lateinit var mAsset: Assets
 
@@ -76,8 +86,8 @@ class SearchActivity : AppCompatActivity() {
 
         override fun onClick(v: View?) {
             var foundObjFormat: Boolean = false
-            for(format in mAsset.formats) {
-                if(format.formatType == "OBJ") {
+            for (format in mAsset.formats) {
+                if (format.formatType == "OBJ") {
                     Log.d("PhotoHolder", "onClick (line 79): ${format.formatType}")
                     requestDataFiles(format)
                     foundObjFormat = true
@@ -86,14 +96,24 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
+        @SuppressLint("DefaultLocale")
         private fun requestDataFiles(format: Format) {
             val backgroundThreadPoster = BackgroundThreadPoster()
+            val entries: ArrayList<Entry> = ArrayList()
 
+            Log.d("PhotoHolder", "requestDataFiles (line 104): ${format.resources}")
+
+            /*
             for (resource in format.resources) {
-                if (resource.url.endsWith(".obj") || resource.url.endsWith(".png")) {
-
+                Log.d("PhotoHolder", "requestDataFiles (line 102): $resource")
+                if (resource.relativePath.toLowerCase()
+                        .endsWith(".obj") || resource.url.toLowerCase().endsWith(".png")
+                ) {
+                    entries.add(Entry(resource.relativePath, resource.url))
                 }
             }
+            Log.d("PhotoHolder", "requestDataFiles (line 108): $entries")
+             */
         }
     }
 
@@ -113,6 +133,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    /*
     private val nullOnEmptyConverterFactory = object : Converter.Factory() {
         fun converterFactory() = this
         override fun responseBodyConverter(
@@ -127,4 +148,15 @@ class SearchActivity : AppCompatActivity() {
                 if (value.contentLength() != 0L) nextResponseBodyConverter.convert(value) else null
         }
     }
+
+     */
+
+    companion object {
+        class Entry(filename: String, url: String) {
+            val mFileName: String = filename
+            val mUrl: String = url
+            lateinit var mContents: ByteArray
+        }
+    }
 }
+

@@ -8,7 +8,11 @@ class Root {
     @Expose
     lateinit var url: String
 
+    @SerializedName("relativePath")
+    @Expose
+    lateinit var relativePath: String
+
     override fun toString(): String {
-        return "Root(url='$url')"
+        return "Root(url='$url', relativePath='$relativePath')"
     }
 }
