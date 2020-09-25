@@ -1,8 +1,11 @@
 package com.kevng2.treear
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.*
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import android.view.*
 import android.widget.Toast
@@ -13,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.ar.core.Anchor
 import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.NodeParent
+import com.google.ar.sceneform.assets.RenderableSource
 import com.google.ar.sceneform.rendering.ModelRenderable
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
@@ -49,7 +53,7 @@ class CameraActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 val intent = Intent(this@CameraActivity, SearchActivity::class.java)
                 intent.putExtra(SEARCH_QUERY, query)
-                startActivity(intent)
+                startActivityForResult(intent, REQUEST_MODEL_URL)
                 return true
             }
 
@@ -58,6 +62,20 @@ class CameraActivity : AppCompatActivity() {
             }
         })
         return true
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.d("CameraActivity", "onActivityResult (line 67): ")
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_MODEL_URL) {
+                Log.d(
+                    "CameraActivity",
+                    "onActivityResult (line 67): ${data?.getStringExtra("URL_VALUE")}"
+                )
+                data?.getStringExtra("URL_VALUE")?.let { setUpApiModel(it) }
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -132,6 +150,28 @@ class CameraActivity : AppCompatActivity() {
             }
     }
 
+    private fun setUpApiModel(apiModel: String) {
+        val model: Uri = Uri.parse("https://poly.googleusercontent.com/downloads/0BnDT3T1wTE/85QOHCZOvov/Mesh_Beagle.gltf")
+        Log.d("CameraActivity", "setUpApiModel (line 155): $model")
+        ModelRenderable.builder()
+            .setSource(
+                applicationContext, RenderableSource.builder().setSource(
+                    applicationContext,
+                    model,
+                    RenderableSource.SourceType.GLTF2
+                ).build()
+            )
+            .setRegistryId(model)
+            .build()
+            .thenAccept { t: ModelRenderable? -> mModelRenderable = t
+                Log.d("CameraActivity", "setUpApiModel (line 167): $t")
+            }
+            .exceptionally { t: Throwable? ->
+                Log.e("CameraActivity", "Could not fetch model from $model", t)
+                return@exceptionally null
+            }
+    }
+
     private fun generateFilename(): String {
         val date: String = SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault()).format(
             Date()
@@ -190,6 +230,7 @@ class CameraActivity : AppCompatActivity() {
         var mModelId: Int = R.raw.oak_tree
         var mModelRenderable: ModelRenderable? = null
         var SEARCH_QUERY: String = "SEARCH_QUERY"
+        const val REQUEST_MODEL_URL = 0
         private const val TAG = "CameraActivity"
     }
 }

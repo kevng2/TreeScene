@@ -10,7 +10,7 @@ interface PolyApi {
     @Headers("Content-Type: application/json")
     @GET(
        "v1/assets?" +
-               "&format=OBJ" +
+               "&format=GLTF" +
                "&pageSize=50" +
                "&key=${BuildConfig.POLY_API_KEY}"
     )
