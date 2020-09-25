@@ -11,21 +11,15 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
 import com.kevng2.treear.api.PolyApi
 import com.kevng2.treear.api.Post
 import com.kevng2.treear.api.assets.Assets
 import com.kevng2.treear.api.assets.format.Format
 import com.techyourchance.threadposter.BackgroundThreadPoster
 import kotlinx.android.synthetic.main.activity_search.*
-import okhttp3.ResponseBody
-import org.json.JSONArray
-import org.json.JSONObject
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.ArrayList
 import retrofit2.*
-import java.lang.reflect.Type
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var mPhotoRecyclerView: RecyclerView
@@ -101,19 +95,14 @@ class SearchActivity : AppCompatActivity() {
             val backgroundThreadPoster = BackgroundThreadPoster()
             val entries: ArrayList<Entry> = ArrayList()
 
-            Log.d("PhotoHolder", "requestDataFiles (line 104): ${format.resources}")
-
-            /*
             for (resource in format.resources) {
-                Log.d("PhotoHolder", "requestDataFiles (line 102): $resource")
                 if (resource.relativePath.toLowerCase()
-                        .endsWith(".obj") || resource.url.toLowerCase().endsWith(".png")
+                        .endsWith(".mtl") || resource.url.toLowerCase().endsWith(".png")
                 ) {
                     entries.add(Entry(resource.relativePath, resource.url))
                 }
             }
             Log.d("PhotoHolder", "requestDataFiles (line 108): $entries")
-             */
         }
     }
 

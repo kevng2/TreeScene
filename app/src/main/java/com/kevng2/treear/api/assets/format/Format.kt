@@ -1,8 +1,8 @@
 package com.kevng2.treear.api.assets.format
 
-import com.google.gson.JsonArray
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.kevng2.treear.api.assets.format.resources.Resources
 import com.kevng2.treear.api.assets.format.root.Root
 import org.json.JSONArray
 
@@ -17,7 +17,7 @@ class Format {
 
     @SerializedName("resources")
     @Expose
-    lateinit var resources: JsonArray
+    lateinit var resources: List<Resources>
 
     override fun toString(): String {
         return "Format(formatType='$formatType', root=$root, resources=$resources)"
