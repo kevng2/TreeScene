@@ -151,8 +151,8 @@ class CameraActivity : AppCompatActivity() {
     }
 
     private fun setUpApiModel(apiModel: String) {
-        val model: Uri = Uri.parse("https://poly.googleusercontent.com/downloads/0BnDT3T1wTE/85QOHCZOvov/Mesh_Beagle.gltf")
-        Log.d("CameraActivity", "setUpApiModel (line 155): $model")
+        val model: Uri =
+            Uri.parse(apiModel)
         ModelRenderable.builder()
             .setSource(
                 applicationContext, RenderableSource.builder().setSource(
@@ -163,7 +163,8 @@ class CameraActivity : AppCompatActivity() {
             )
             .setRegistryId(model)
             .build()
-            .thenAccept { t: ModelRenderable? -> mModelRenderable = t
+            .thenAccept { t: ModelRenderable? ->
+                mModelRenderable = t
                 Log.d("CameraActivity", "setUpApiModel (line 167): $t")
             }
             .exceptionally { t: Throwable? ->

@@ -35,7 +35,6 @@ import java.net.URL
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var mPhotoRecyclerView: RecyclerView
-    private val entries: ArrayList<Entry> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,12 +62,6 @@ class SearchActivity : AppCompatActivity() {
                         this@SearchActivity, 3
                     )
                     mPhotoRecyclerView.adapter = PhotoAdapter(assets)
-                    for (asset in assets!!) {
-                        Log.d(
-                            "SearchActivity",
-                            "onResponse (line 52): ${asset.formats[0].root.url}"
-                        )
-                    }
                 }
             }
         })
@@ -92,104 +85,14 @@ class SearchActivity : AppCompatActivity() {
         }
 
         override fun onClick(v: View?) {
-            var foundObjFormat: Boolean = false
-            Log.d("PhotoHolder", "onClick (line 83): ${mAsset.name}")
             for (format in mAsset.formats) {
-                if (format.formatType == "GLTF") {
-                    Log.d("PhotoHolder", "onClick (line 97): ${format.root.url}")
+                if (format.formatType == "GLTF2") {
                     val intent = Intent()
                     intent.putExtra("URL_VALUE", format.root.url)
                     setResult(Activity.RESULT_OK, intent)
                     finish()
-                    /*
-                    format.root.url.httpDownload().destination { response, url ->
-                        File(filesDir, "asset.obj")
-                    }.response { request, response, result ->
-                        result.fold({}, {
-                            Log.e("PhotoHolder", "An error occurred")
-                        })
-                    }
-                    entries.add(Entry(format.root.relativePath, format.root.url))
-                    requestDataFiles(mAsset, format)
-                    foundObjFormat = true
-                    break
-                     */
                 }
             }
-        }
-    }
-
-    @SuppressLint("DefaultLocale")
-    private fun requestDataFiles(asset: Assets, format: Format) {
-        /*
-        val retrofitGet: Retrofit = Retrofit.Builder()
-            .baseUrl("https://poly.googleapis.com/")
-            .build()
-
-        val fileDownloadClient: FileDownloadClient =
-            retrofitGet.create(FileDownloadClient::class.java)
-
-        val call: Call<ResponseBody> = fileDownloadClient.downloadFile(asset.name)
-
-        call.enqueue(object : Callback<ResponseBody> {
-            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.e("SearchActivity", "onFailure (line 111): ", t)
-            }
-
-            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                Log.d("SearchActivity", "onResponse (line 115): ${response.body()}")
-            }
-        })
-         */
-
-        for (resource in format.resources) {
-            if (resource.relativePath.toLowerCase()
-                    .endsWith(".mtl") || resource.url.toLowerCase().endsWith(".png")
-            ) {
-                resource.url.httpDownload().destination { response, url ->
-                    File(filesDir, resource.relativePath)
-                }.response { request, response, result ->
-                    result.fold({}, {
-                        Log.e("SearchActivity", "An error occurred ")
-                    })
-                }
-                entries.add(Entry(resource.relativePath, resource.url))
-            }
-        }
-//        downloadFiles()
-    }
-
-    /*
-    private fun downloadFiles() {
-        val backgroundThread = BackgroundThreadPoster()
-        backgroundThread.post {
-            for (entry in entries) {
-                val url = URL(entry.mUrl)
-                val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
-                val responseCode = connection.responseCode
-                if(responseCode != 200) {
-                    Log.e("SearchActivity", "downloadFiles (line 142): cannot download file")
-                }
-                val outputStream = ByteArrayOutputStream()
-                copyStream(connection.inputStream, outputStream)
-                entry.mContents = outputStream.toByteArray()
-            }
-            importDownloadedObject()
-        }
-    }
-     */
-
-    private fun importDownloadedObject() {
-    }
-
-    private fun copyStream(inputStream: InputStream, outputStream: OutputStream) {
-        val buffer: ByteArray = ByteArray(16384)
-        var totalBytes = 0
-        var bytesReadThisTime: Int = inputStream.read(buffer, 0, buffer.size)
-        while (bytesReadThisTime > 0) {
-            outputStream.write(buffer, 0, bytesReadThisTime)
-            totalBytes += bytesReadThisTime
-            bytesReadThisTime = inputStream.read(buffer, 0, buffer.size)
         }
     }
 
@@ -223,13 +126,4 @@ class SearchActivity : AppCompatActivity() {
                 if (value.contentLength() != 0L) nextResponseBodyConverter.convert(value) else null
         }
     }
-
-    companion object {
-        class Entry(filename: String, url: String) {
-            val mFileName: String = filename
-            val mUrl: String = url
-            lateinit var mContents: ByteArray
-        }
-    }
 }
-
