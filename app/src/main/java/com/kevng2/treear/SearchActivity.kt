@@ -1,6 +1,5 @@
 package com.kevng2.treear
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -13,25 +12,15 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.github.kittinunf.fuel.httpDownload
-import com.kevng2.treear.api.FileDownloadClient
 import com.kevng2.treear.api.PolyApi
 import com.kevng2.treear.api.Post
 import com.kevng2.treear.api.assets.Assets
-import com.kevng2.treear.api.assets.format.Format
-import com.techyourchance.threadposter.BackgroundThreadPoster
 import kotlinx.android.synthetic.main.activity_search.*
 import okhttp3.ResponseBody
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.ArrayList
 import retrofit2.*
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.InputStream
-import java.io.OutputStream
 import java.lang.reflect.Type
-import java.net.HttpURLConnection
-import java.net.URL
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var mPhotoRecyclerView: RecyclerView
