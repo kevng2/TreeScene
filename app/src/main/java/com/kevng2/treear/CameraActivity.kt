@@ -40,6 +40,7 @@ class CameraActivity : AppCompatActivity() {
         setUpModel()
         setUpPlane()
         take_picture_button.setOnClickListener { takePhoto() }
+        Snackbar.make(camera_view, "Tap to plant tree", Snackbar.LENGTH_LONG).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -48,7 +49,7 @@ class CameraActivity : AppCompatActivity() {
 
         val searchItem = menu?.findItem(R.id.tree_search_bar)
         val searchView: SearchView = searchItem?.actionView as SearchView
-
+        searchView.queryHint = "Coconut Tree"
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 val intent = Intent(this@CameraActivity, SearchActivity::class.java)
@@ -99,6 +100,7 @@ class CameraActivity : AppCompatActivity() {
                                 "the camera preview. Then, an indicator will pop up to plant some trees!\n\n" +
                                 "Tap on any dotted area to plant a tree\n\n" +
                                 "You can switch trees anytime by selecting the trees at the bottom\n\n" +
+                                "Search Icon: Search for available 3D assets\n\n" +
                                 "Trash Icon: Delete mode. Tap on tree to delete\n\n" +
                                 "Check mark Icon: Switch back to add mode\n\n" +
                                 "Pinch to grow the tree\n\n" +
