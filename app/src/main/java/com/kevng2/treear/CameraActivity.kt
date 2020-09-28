@@ -54,8 +54,9 @@ class CameraActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 val intent = Intent(this@CameraActivity, SearchActivity::class.java)
                 intent.putExtra(SEARCH_QUERY, query)
+                searchView.clearFocus()
                 startActivityForResult(intent, REQUEST_MODEL_URL)
-                return true
+                return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
@@ -67,7 +68,6 @@ class CameraActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Log.d("CameraActivity", "onActivityResult (line 67): ")
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_MODEL_URL) {
                 Log.d(
@@ -95,7 +95,7 @@ class CameraActivity : AppCompatActivity() {
                 AlertDialog.Builder(this@CameraActivity)
                     .setPositiveButton(android.R.string.ok) { dialog, which -> }
                     .setMessage(
-                        "Welcome to TreeVisualizer\n\n" +
+                        "Welcome to TreeVisualizer!\n\n" +
                                 "To start, wave your camera around like the animation is indicating on " +
                                 "the camera preview. Then, an indicator will pop up to plant some trees!\n\n" +
                                 "Tap on any dotted area to plant a tree\n\n" +
