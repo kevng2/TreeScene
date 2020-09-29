@@ -20,19 +20,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".SearchActivity"></activity>
-        <activity android:name=".CameraActivity">
+        <activity android:name=".ApiCheckActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".SearchActivity" />
+        <activity android:name=".CameraActivity"/>
         <meta-data
             android:name="com.google.ar.core"
             android:value="required" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.ar.codelab.name.provider"
