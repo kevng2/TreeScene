@@ -11,7 +11,7 @@ interface PolyApi {
     @GET(
        "v1/assets?" +
                "&format=GLTF2" +
-               "&pageSize=50" +
+               "&pageSize=51" +
                "&key=${BuildConfig.POLY_API_KEY}"
     )
     fun fetchModels(@Query("keywords") keywords: String): Call<Post>

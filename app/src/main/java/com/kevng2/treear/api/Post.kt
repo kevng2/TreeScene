@@ -7,7 +7,7 @@ import com.kevng2.treear.api.assets.Assets
 class Post {
     @SerializedName("assets")
     @Expose
-    lateinit var assets: ArrayList<Assets>
+    var assets: ArrayList<Assets>? = null
 
     override fun toString(): String {
         return "Post(assets=$assets)"

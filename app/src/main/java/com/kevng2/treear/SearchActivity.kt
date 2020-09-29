@@ -12,6 +12,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.kevng2.treear.api.PolyApi
 import com.kevng2.treear.api.Post
 import com.kevng2.treear.api.assets.Assets
@@ -44,13 +45,22 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onResponse(call: Call<Post>, response: Response<Post>) {
-                if (response.isSuccessful) {
+                if (response.body()?.assets != null) {
                     val assets: ArrayList<Assets>? = response.body()?.assets
                     mPhotoRecyclerView = photo_recycler_view
                     mPhotoRecyclerView.layoutManager = GridLayoutManager(
                         this@SearchActivity, 3
                     )
                     mPhotoRecyclerView.adapter = PhotoAdapter(assets)
+                }
+                else {
+                    MaterialAlertDialogBuilder(this@SearchActivity)
+                        .setTitle("No Assets Found")
+                        .setPositiveButton(android.R.string.ok) { dialog, which ->
+                            finish()
+                        }
+                        .create()
+                        .show()
                 }
             }
         })
