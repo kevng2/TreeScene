@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TreeAR</string>
+    <string name="app_name">TreeScene</string>
     <string name="start_camera">Plant Trees!</string>
     <string name="main_menu_background_image">Main menu background image</string>
     <string name="trees">Trees</string>
