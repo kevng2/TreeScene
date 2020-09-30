@@ -1,4 +1,4 @@
-# Tree AR
+# TreeScene
 An Android application that helps users visualize what a tree would look like in their backyard.
 
 # What I Learned
